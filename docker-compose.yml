@@ -1,0 +1,161 @@
+version: "3.8"
+services:
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: n8n
+      POSTGRES_DB: n8n
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  n8n:
+    image: n8nio/n8n:latest
+    depends_on:
+      - postgres
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=n8n
+      - DB_POSTGRESDB_PASSWORD=n8n
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=admin
+      - GENERIC_TIMEZONE=UTC
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./orchestrator:/home/node/.n8n
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "nc -z localhost 9092" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  telemetry_input_service:
+    build: ./services/telemetry_input_service
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./services/telemetry_input_service:/app
+    command: [ "python", "main.py" ]
+
+  periodic_input_service:
+    build: ./services/periodic_input_service
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./services/periodic_input_service:/app
+    command: [ "python", "main.py" ]
+    restart: on-failure
+
+  normalization_service:
+    build:
+      context: ./services/normalization_service
+    container_name: normalization_service
+    depends_on:
+      - kafka
+    env_file:
+      - .env
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - RAW_TOPIC=raw_logs
+      - NORMALIZED_TOPIC=normalized_logs
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./services/normalization_service:/app
+    command: [ "sh", "-c", "sleep 5 && python main.py" ]
+    restart: on-failure
+
+  agent_service:
+    build: ./services/agent_service
+    volumes:
+      - ./services/agent_service:/app
+    depends_on:
+      - kafka
+      - chromadb
+    env_file:
+      - .env
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - PYTHONUNBUFFERED=1
+    command: [ "sh", "-c", "sleep 10 && python main.py" ]
+    restart: on-failure
+
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+
+  output_service:
+    build: ./services/output_service
+    container_name: output_service
+    depends_on:
+      kafka:
+        condition: service_healthy
+      n8n:
+        condition: service_started
+    env_file:
+      - .env
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - N8N_WEBHOOK_URL=http://n8n:5678/webhook/audit-alerts
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./services/output_service:/app
+    command: [ "sh", "-c", "sleep 15 && python main.py" ]
+    restart: on-failure
+
+  streamlit_app:
+    build: ./streamlit_app
+    container_name: streamlit_app
+    depends_on:
+      - chromadb
+    env_file:
+      - .env
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./streamlit_app:/app
+      - ./services/agent_service/data/compliance_docs:/services/agent_service/data/compliance_docs
+    restart: on-failure
+
+volumes:
+  postgres_data:
+  chroma_data:

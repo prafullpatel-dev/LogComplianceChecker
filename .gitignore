@@ -1,0 +1,32 @@
+# Environment
+.env
+*.env
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Runtime data
+chroma_store/
+*.log
+crash.journal
+orchestrator/logs/
+
+# Node
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store

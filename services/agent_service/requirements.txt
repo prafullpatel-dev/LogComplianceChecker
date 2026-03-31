@@ -1,0 +1,5 @@
+chromadb
+kafka-python
+PyPDF2
+langchain-groq
+sentence-transformers

@@ -1,0 +1,57 @@
+[
+  {
+    "timestamp": "2025-11-04T10:12:10Z",
+    "src_ip": "10.0.0.8",
+    "dest_ip": "10.0.0.15",
+    "event_type": "file_modified",
+    "severity": "high",
+    "msg": "Critical system file modified: /etc/passwd",
+    "user": "root",
+    "hostname": "sec-srv-1",
+    "device_vendor": "Splunk",
+    "device_product": "Splunk Enterprise",
+    "source_type": "siem"
+  },
+  {
+    "timestamp": "2025-11-04T10:15:30Z",
+    "src_ip": "192.168.1.45",
+    "dest_ip": "10.0.0.1",
+    "event_type": "login_failed",
+    "severity": "medium",
+    "msg": "5 failed login attempts in 60 seconds",
+    "user": "admin",
+    "hostname": "web-server-01",
+    "device_vendor": "ArcSight",
+    "device_product": "ArcSight SIEM",
+    "source_type": "siem"
+  },
+  {
+    "timestamp": "2025-11-04T10:18:00Z",
+    "endpoint_id": "WS-DEV-042",
+    "os": "Windows 11",
+    "event": "process_injection",
+    "severity": "critical",
+    "process_name": "svchost.exe",
+    "process_id": 4812,
+    "parent_process": "cmd.exe",
+    "user": "john.doe",
+    "device_vendor": "CrowdStrike",
+    "source_type": "edr"
+  },
+  {
+    "timestamp": "2025-11-04T10:20:00Z",
+    "src_ip": "203.0.113.45",
+    "src_port": 52341,
+    "dest_ip": "10.0.0.80",
+    "dest_port": 22,
+    "protocol": "TCP",
+    "action": "BLOCK",
+    "direction": "inbound",
+    "severity": "high",
+    "rule_name": "BLOCK_SSH_EXTERNAL",
+    "rule_id": "FW-001",
+    "device": "FW-EDGE-01",
+    "vendor": "Palo Alto",
+    "source_type": "firewall"
+  }
+]

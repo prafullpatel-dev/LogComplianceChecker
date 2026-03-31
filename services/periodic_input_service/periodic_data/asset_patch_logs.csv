@@ -1,0 +1,2 @@
+timestamp,asset_id,asset_type,hostname,owner,status,os,last_patch_date,missing_patches,patch_tool
+2025-11-04T09:10:00Z,ASSET-002,Server,app-server-2,IT,Degraded,Ubuntu 22.04,2025-09-30,CVE-2025-1304;CVE-2025-0920,Tanium

@@ -1,0 +1,3 @@
+{"timestamp": "2025-11-04T09:00:00Z", "src_ip": "10.0.0.1", "dest_ip": "10.0.0.100", "protocol": "ICMP", "latency_ms": 250, "packet_loss": 0.15, "device": "NET-MON-01", "vendor": "SolarWinds", "source_type": "network_monitoring"}
+{"timestamp": "2025-11-04T09:05:00Z", "src_ip": "10.0.0.2", "dest_ip": "10.0.0.200", "protocol": "TCP", "latency_ms": 5, "packet_loss": 0.0, "device": "NET-MON-01", "vendor": "SolarWinds", "source_type": "network_monitoring"}
+{"timestamp": "2025-11-04T09:10:00Z", "src_ip": "10.0.0.50", "dest_ip": "8.8.8.8", "protocol": "DNS", "latency_ms": 800, "packet_loss": 0.30, "device": "NET-MON-02", "vendor": "Nagios", "source_type": "network_monitoring"}

@@ -1,0 +1,50 @@
+[
+    {
+        "timestamp": "2025-11-04T09:00:00Z",
+        "src_ip": "203.0.113.45",
+        "src_port": 52341,
+        "dest_ip": "10.0.0.80",
+        "dest_port": 22,
+        "protocol": "TCP",
+        "action": "BLOCK",
+        "direction": "inbound",
+        "severity": "high",
+        "rule_name": "BLOCK_SSH_EXTERNAL",
+        "rule_id": "FW-001",
+        "device": "FW-EDGE-01",
+        "vendor": "Palo Alto",
+        "source_type": "firewall"
+    },
+    {
+        "timestamp": "2025-11-04T09:05:00Z",
+        "src_ip": "10.0.0.12",
+        "src_port": 49521,
+        "dest_ip": "185.220.101.50",
+        "dest_port": 443,
+        "protocol": "HTTPS",
+        "action": "ALLOW",
+        "direction": "outbound",
+        "severity": "medium",
+        "rule_name": "ALLOW_HTTPS_OUTBOUND",
+        "rule_id": "FW-020",
+        "device": "FW-CORE-01",
+        "vendor": "Cisco ASA",
+        "source_type": "firewall"
+    },
+    {
+        "timestamp": "2025-11-04T09:10:00Z",
+        "src_ip": "10.0.0.55",
+        "src_port": 3389,
+        "dest_ip": "10.0.0.100",
+        "dest_port": 3389,
+        "protocol": "RDP",
+        "action": "ALLOW",
+        "direction": "inbound",
+        "severity": "high",
+        "rule_name": "ALLOW_RDP_INTERNAL",
+        "rule_id": "FW-030",
+        "device": "FW-EDGE-01",
+        "vendor": "Palo Alto",
+        "source_type": "firewall"
+    }
+]

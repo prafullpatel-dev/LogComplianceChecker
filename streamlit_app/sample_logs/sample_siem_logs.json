@@ -1,0 +1,67 @@
+[
+  {
+    "timestamp": "2025-11-04T08:10:00Z",
+    "src_ip": "10.0.0.8",
+    "dest_ip": "10.0.0.15",
+    "event_type": "file_modified",
+    "severity": "high",
+    "msg": "Critical system file modified: /etc/passwd",
+    "user": "root",
+    "hostname": "sec-srv-1",
+    "device_vendor": "Splunk",
+    "device_product": "Splunk Enterprise",
+    "source_type": "siem"
+  },
+  {
+    "timestamp": "2025-11-04T08:15:00Z",
+    "src_ip": "192.168.1.45",
+    "dest_ip": "10.0.0.1",
+    "event_type": "login_failed",
+    "severity": "medium",
+    "msg": "Multiple failed login attempts detected",
+    "user": "admin",
+    "hostname": "web-server-01",
+    "device_vendor": "ArcSight",
+    "device_product": "ArcSight SIEM",
+    "source_type": "siem"
+  },
+  {
+    "timestamp": "2025-11-04T08:22:00Z",
+    "src_ip": "10.0.0.99",
+    "dest_ip": "10.0.0.200",
+    "event_type": "port_scan",
+    "severity": "high",
+    "msg": "Port scan detected from internal host",
+    "user": "unknown",
+    "hostname": "internal-host",
+    "device_vendor": "Splunk",
+    "device_product": "Splunk Enterprise",
+    "source_type": "siem"
+  },
+  {
+    "timestamp": "2025-11-04T08:30:00Z",
+    "src_ip": "10.0.0.5",
+    "dest_ip": "10.0.0.50",
+    "event_type": "data_export",
+    "severity": "high",
+    "msg": "Large data export initiated from database server",
+    "user": "dbadmin",
+    "hostname": "db-server-01",
+    "device_vendor": "QRadar",
+    "device_product": "IBM QRadar",
+    "source_type": "siem"
+  },
+  {
+    "timestamp": "2025-11-04T08:45:00Z",
+    "src_ip": "10.0.0.12",
+    "dest_ip": "10.0.0.30",
+    "event_type": "policy_violation",
+    "severity": "low",
+    "msg": "User accessed resource outside business hours",
+    "user": "john.doe",
+    "hostname": "workstation-12",
+    "device_vendor": "Splunk",
+    "device_product": "Splunk Enterprise",
+    "source_type": "siem"
+  }
+]
