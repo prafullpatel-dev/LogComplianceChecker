@@ -224,8 +224,23 @@ div[data-testid="stSelectbox"] select {
     color: #64748b;
     margin-bottom: 0.3rem;
 }
-.step-indicator.done { color: #34d399; }
-.step-indicator.active { color: #63b3ed; }
+.policy-context {
+    white-space: normal !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.95rem !important;
+    line-height: 1.8 !important;
+    color: #e2e8f0 !important;
+    background: rgba(17, 25, 40, 0.5) !important;
+    padding: 1.2rem !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(99,179,237,0.15) !important;
+}
+.policy-context p {
+    margin-bottom: 1.2rem;
+}
+.policy-context p:last-child {
+    margin-bottom: 0;
+}
 
 /* Scrollable results area */
 .results-container {
@@ -483,7 +498,8 @@ with tab1:
                                 with st.expander("📄 Normalized Log (ECS)"):
                                     st.json(r["normalized_log"])
                                 with st.expander("📚 Policy Context Retrieved"):
-                                    st.text(r["context_used"])
+                                    formatted_context = r["context_used"].replace('\n\n', '</p><p>').replace('\n', '<br>')
+                                    st.markdown(f'<div class="policy-context"><p>{formatted_context}</p></div>', unsafe_allow_html=True)
 
                         # Export
                         st.markdown("---")
@@ -589,7 +605,8 @@ with tab2:
                         st.json(result["normalized_log"])
                 with c2:
                     with st.expander("📚 Policy Context Retrieved"):
-                        st.text(result["context_used"])
+                        formatted_context = result["context_used"].replace('\n\n', '</p><p>').replace('\n', '<br>')
+                        st.markdown(f'<div class="policy-context"><p>{formatted_context}</p></div>', unsafe_allow_html=True)
 
             except json.JSONDecodeError as e:
                 st.error(f"Invalid JSON: {e}")
