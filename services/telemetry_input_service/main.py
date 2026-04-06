@@ -2,7 +2,7 @@ import os
 import json
 import time
 from kafka import KafkaProducer
-from watchdog.observers import Observer
+from watchdog.observers.polling import PollingObserver
 from watchdog.events import FileSystemEventHandler
 
 # Kafka configuration
@@ -72,6 +72,12 @@ class BufferFileHandler(FileSystemEventHandler):
 
         # Get previous offset
         last_offset = load_offset()
+
+        # Safety: if buffer was truncated/reset, re-sync offset
+        if last_offset > len(logs):
+            print(f"Buffer was reset (offset {last_offset} > {len(logs)} logs). Re-syncing offset to 0.")
+            last_offset = 0
+
         new_logs = logs[last_offset:]
 
         if not new_logs:
@@ -97,9 +103,9 @@ if __name__ == "__main__":
     # Connect to Kafka
     producer = connect_kafka()
 
-    # Start file watcher
+    # Start file watcher using PollingObserver for Docker compatibility
     event_handler = BufferFileHandler(producer)
-    observer = Observer()
+    observer = PollingObserver(timeout=2)
     observer.schedule(event_handler, path=os.path.dirname(DATA_PATH), recursive=False)
     observer.start()
 
@@ -111,4 +117,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
+
 

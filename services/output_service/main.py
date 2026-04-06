@@ -17,7 +17,7 @@ import requests
 # ─── Configuration ────────────────────────────────────────────────────────────
 KAFKA_BROKER = os.getenv("KAFKA_BROKER", "kafka:9092")
 AUDIT_TOPIC = os.getenv("AUDIT_TOPIC", "audit_results")
-N8N_WEBHOOK_URL = os.getenv("N8N_WEBHOOK_URL", "http://n8n:5678/webhook/audit-alerts")
+N8N_WEBHOOK_URL = os.getenv("N8N_WEBHOOK_URL", "http://localhost:5678/webhook/audit-alerts")
 RESULTS_FILE = os.getenv("RESULTS_FILE", "/app/audit_results.json")
 
 
@@ -30,7 +30,7 @@ def connect_kafka():
                 AUDIT_TOPIC,
                 bootstrap_servers=KAFKA_BROKER,
                 group_id="output_service_group",
-                auto_offset_reset="latest",
+                auto_offset_reset="earliest",
                 value_deserializer=lambda m: json.loads(m.decode("utf-8")),
             )
             print("Connected to Kafka broker!")
